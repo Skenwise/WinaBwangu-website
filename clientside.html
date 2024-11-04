@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        #transactionsContainer { margin-top: 20px; }
+        hr { margin: 10px 0; }
+    </style>
+    <title>Wina Bwangu Web Application</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>Wina Bwangu Financial Transactions</h1>
+    </header>
+
+    <section id="New-transaction">
+        <h2>New Transaction</h2>
+        <form id="TransactionForm">
+            <label for="booth">Select Mobile Booth: </label>
+            <select id="boothID" onchange="updateLocation()">
+                <option value="">--Select--</option>
+                <option value="Wina1">Wina1</option>
+                <option value="Wina2">Wina2</option>
+                <option value="Wina3">Wina3</option>
+                <option value="Wina4">Wina4</option>
+                <option value="Wina5">Wina5</option>
+                <option value="Wina6">Wina6</option>
+            </select>
+
+            <label for="location">Location:</label>
+            <input type="text" id="location" readonly>
+
+            <label for="service">Select Service:</label>
+            <select id="service" onchange="updateRevenue()">
+                <option value="">--Select--</option>
+            </select>
+
+            <label for="TransactionAmount">Transaction Amount (kwacha): </label>
+            <input type="number" id="TransactionAmount" placeholder="Enter Amount" required>
+
+            <label for="revenue">Revenue Per kwacha:</label>
+            <input type="text" id="revenue" readonly>
+
+            <button type="submit" onclick="processTransaction(event)">Submit Transaction</button>
+        </form>
+    </section>
+
+    <h1>Transaction Dashboard</h1>
+    <button id="fetchTransactions">Fetch Transactions</button>
+    <div id="transactionsContainer"></div> <!-- Ensure this element exists -->
+
+    <script src="app.js"></script>
+    <script>
+        // Add an event listener for DOMContentLoaded
+        document.addEventListener('DOMContentLoaded', function() {
+            // Fetch transactions from the API when the button is clicked
+            document.getElementById('fetchTransactions').addEventListener('click', function() {
+                fetch('http://localhost:3000/api/transactions')
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        console.log('Data fetched:', data); // Log the fetched data
+    
+                        const container = document.getElementById('transactionsContainer');
+                        console.log('Container found: ', container); // This should log the container element or null
+    
+                        // Check if the container exists before modifying it
+                        if (container) {
+                            container.innerHTML = ''; // Clear previous transactions
+                            if (data.length === 0) {
+                                container.innerHTML = '<p>No transactions found.</p>'; // Inform if no transactions
+                            } else {
+                                data.forEach(transaction => {
+                                    const transactionDiv = document.createElement('div');
+                                    transactionDiv.innerHTML = `
+                                        <p>Transaction ID: ${transaction.TransactionID}</p>
+                                        <p>Booth ID: ${transaction.BoothID}</p>
+                                        <p>Service ID: ${transaction.ServiceID}</p>
+                                        <p>Transaction Amount: ${transaction.TransactionAmount}</p>
+                                        <p>Location: ${transaction.location}</p>
+                                        <p>Revenue: ${transaction.revenue}</p>
+                                        <p>Total: ${transaction.total}</p>
+                                        <hr>
+                                    `;
+                                    container.appendChild(transactionDiv);
+                                });
+                            }
+                        } else {
+                            console.error('Container element not found.'); // Log error if container is not found
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error fetching transactions:', error);
+                    });
+            });
+        });
+    </script>    
+</body>
+</html>
