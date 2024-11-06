@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monthly Limit</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        .container {
+            width: 80%;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: white;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        .service-limit {
+            padding: 10px;
+            margin: 10px 0;
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+        }
+        .service-limit h3 {
+            margin-top: 0;
+        }
+    </style>
+    <link rel="stylesheet" href="monthly-limit.css">
+</head>
+<body>
+
+<div class="container">
+    <h1>Monthly Limit per Service</h1>
+    <div id="serviceTotalsContainer"></div>
+</div>
+
+<script>
+// Monthly limit for each service
+const serviceLimits = {
+    'Airtel Money': 350000, // Monthly limit for Airtel Money
+    'MTN Money': 160000, // Monthly limit for MTN Money
+    'Zamtel Money': 70000,  // Monthly limit for Zamtel
+    'Zanaco': 80000,         // Monthly limit for Zanaco
+    'FNB': 80000            // Monthly limit for FNB
+};
+
+// Sample transaction data
+const transactions = [
+    { ServiceID: 'Airtel Money', TransactionAmount: 350000 },
+    { ServiceID: 'MTN Money', TransactionAmount: 160000 },
+    { ServiceID: 'Zamtel Money', TransactionAmount: 70000 },
+    { ServiceID: 'Zanaco', TransactionAmount: 80000 },
+    { ServiceID: 'FNB', TransactionAmount: 80000 },
+];
+
+// Calculate cumulative totals and remaining amounts
+function calculateTotals(transactions) {
+    const cumulativeTotals = {};
+
+    // Calculate cumulative totals for each service
+    transactions.forEach(transaction => {
+        const serviceID = transaction.ServiceID;
+        const amount = parseFloat(transaction.TransactionAmount);
+
+        if (!cumulativeTotals[serviceID]) {
+            cumulativeTotals[serviceID] = 0;
+        }
+
+        cumulativeTotals[serviceID] += amount;
+    });
+
+    // Create and display service totals
+    displayResults(cumulativeTotals);
+}
+
+// Function to display results
+function displayResults(cumulativeTotals) {
+    const container = document.getElementById('serviceTotalsContainer');
+    container.innerHTML = ''; // Clear previous data
+
+    Object.keys(serviceLimits).forEach(serviceID => {
+        const monthlyLimit = serviceLimits[serviceID];
+        const totalSpent = cumulativeTotals[serviceID] || 0;
+        const remainingAmount = monthlyLimit - totalSpent;
+
+        const serviceDiv = document.createElement('div');
+        serviceDiv.classList.add('service-limit');
+        serviceDiv.innerHTML = `
+            <h3>Service ID: ${serviceID}</h3>
+            <p>Cumulative Total: ${totalSpent.toFixed(2)} kwacha</p>
+            <p>Remaining Amount: ${remainingAmount.toFixed(2)} kwacha</p>
+        `;
+        container.appendChild(serviceDiv);
+    });
+}
+
+// Call the function
+calculateTotals(transactions);
+</script>
+
+</body>
+</html>

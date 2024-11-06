@@ -111,3 +111,64 @@ hr {
         margin: 10px 0;
     }
 }
+
+#transactionsContainer div {
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+#taxPerformanceContainer div {
+    background-color: #4CAF50;
+    height: 30px;
+    color: white;
+    line-height: 30px; /* Center text vertically */
+    border-radius: 5px;
+}
+
+/* General styling for the chart containers */
+canvas {
+    display: block;
+    margin: 0 auto; /* Centers the canvas */
+    max-width: 400px; /* Set the maximum width */
+    max-height: 400px; /* Set the maximum height */
+    width: 100%; /* The chart will take up 100% of its parent container */
+    height: auto; /* Maintains aspect ratio */
+}
+
+/* Optional: specific IDs if you want different sizes for each chart */
+#myPieChart {
+    max-width: 350px;
+    max-height: 350px;
+}
+
+#myHistogram {
+    max-width: 500px;
+    max-height: 400px;
+}
+
+/* Button styling */
+.btn-link {
+    display: inline-block;
+    background-color: #3498db;
+    color: #fff;
+    padding: 15px 30px;
+    text-align: center;
+    text-decoration: none;
+    font-size: 1.2em;
+    border-radius: 50px;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    margin: 20px auto;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.btn-link:hover {
+    background-color: #2980b9;
+    transform: scale(1.05);
+}
+
+.btn-link:active {
+    background-color: #1c5980;
+}
+

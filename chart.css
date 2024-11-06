@@ -1,0 +1,62 @@
+/* chart.css - Styles for the chart page */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f7f9fb;
+    color: #333;
+    margin: 0;
+    padding: 0;
+}
+
+header {
+    background-color: #3498db;
+    color: #fff;
+    padding: 20px;
+    text-align: center;
+}
+
+footer {
+    background-color: #3498db;
+    text-align: center;
+    padding: 10px;
+}
+
+h1 {
+    margin: 0;
+}
+
+.chart-container {
+    margin: 30px auto;
+    width: 80%;
+    max-width: 800px;
+    background-color: #fff;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+canvas {
+    width: 100% !important;
+    height: auto !important;
+}
+
+.btn-link {
+    display: inline-block;
+    background-color: #3498db;
+    color: #fff;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    border-radius: 5px;
+    font-size: 1em;
+    margin-top: 20px;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.btn-link:hover {
+    background-color: #2980b9;
+    transform: scale(1.05);
+}
+
+.btn-link:active {
+    background-color: #1c5980;
+}

@@ -8,9 +8,16 @@
         body { font-family: Arial, sans-serif; }
         #transactionsContainer { margin-top: 20px; }
         hr { margin: 10px 0; }
+        #taxperformanceContainer div {
+            margin: 10px 0;
+            border-radius: 5px;
+            color: white;
+            text-align: center;
+        }
     </style>
     <title>Wina Bwangu Web Application</title>
     <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.6/dist/chart.umd.min.js"></script>
 </head>
 <body>
     <header>
@@ -45,6 +52,12 @@
             <label for="revenue">Revenue Per kwacha:</label>
             <input type="text" id="revenue" readonly>
 
+            <label for="total">Total (kwacha):</label>
+            <input type="text" id="total" readonly>
+
+            <label for="totalAfterTax">Total After Tax: </label>
+            <input type="text" id="totalAfterTax" readonly>
+
             <button type="submit" onclick="processTransaction(event)">Submit Transaction</button>
         </form>
     </section>
@@ -52,6 +65,23 @@
     <h1>Transaction Dashboard</h1>
     <button id="fetchTransactions">Fetch Transactions</button>
     <div id="transactionsContainer"></div> <!-- Ensure this element exists -->
+
+    <a href="monthly-limit.html" class="btn-link">View Monthly Limit</a>
+
+    <a href="chart.html" class="btn-link">View Tax Performance Chart</a>
+
+
+    <div id="serviceTotalsContainer"></div>
+
+
+    <h2>Transaction Frequency by Booth (Pie chart)</h2>
+    <canvas id="myPieChart" width="200" height="200"></canvas>
+
+    <h2>Transaction Frequency by Booth(histogram)</h2>
+    <canvas id="myHistogram" width="200" height="200"></canvas>
+
+    <h2>Tax obligations Performance</h2>
+    <div id="taxPerformanceContainer"></div>
 
     <script src="app.js"></script>
     <script>
@@ -67,41 +97,106 @@
                         return response.json();
                     })
                     .then(data => {
+                        //Sort data by timstamp if needed and get the last 3 transactions
+                        const lastThreeTransaction = data.slice(-3)
                         console.log('Data fetched:', data); // Log the fetched data
     
                         const container = document.getElementById('transactionsContainer');
                         console.log('Container found: ', container); // This should log the container element or null
+                        container.innerHTML = '';           // clear previous transaction
     
                         // Check if the container exists before modifying it
-                        if (container) {
-                            container.innerHTML = ''; // Clear previous transactions
-                            if (data.length === 0) {
-                                container.innerHTML = '<p>No transactions found.</p>'; // Inform if no transactions
-                            } else {
-                                data.forEach(transaction => {
-                                    const transactionDiv = document.createElement('div');
-                                    transactionDiv.innerHTML = `
-                                        <p>Transaction ID: ${transaction.TransactionID}</p>
-                                        <p>Booth ID: ${transaction.BoothID}</p>
-                                        <p>Service ID: ${transaction.ServiceID}</p>
-                                        <p>Transaction Amount: ${transaction.TransactionAmount}</p>
-                                        <p>Location: ${transaction.location}</p>
-                                        <p>Revenue: ${transaction.revenue}</p>
-                                        <p>Total: ${transaction.total}</p>
-                                        <hr>
-                                    `;
-                                    container.appendChild(transactionDiv);
-                                });
-                            }
+                        if (lastThreeTransaction.length === 0) {
+                            container.innerHTML = '<p>No transaction found. </p>'; // Clear previous transactions
+
                         } else {
-                            console.error('Container element not found.'); // Log error if container is not found
+                            lastThreeTransaction.forEach(transaction => {
+                                const transactionDiv = document.createElement('div');
+                                transactionDiv.innerHTML = `
+                                    <p>Transaction ID: ${transaction.TransactionID}</p>
+                                    <p>Booth ID: ${transaction.BoothID}</p>
+                                    <p>Service ID: ${transaction.ServiceID}</p>
+                                    <p>Transaction Amount: ${transaction.TransactionAmount}</p>
+                                    <p>Location: ${transaction.location}</p>
+                                    <p>Revenue: ${transaction.revenue}</p>
+                                    <p>Total: ${transaction.total}</p>
+                                    <hr>
+                                `;
+                                container.appendChild(transactionDiv);
+                            });
                         }
+
+                        // prepare data for the charts
+
+                        const boothCounts = {};
+                        data.forEach(transaction => {
+                            const booth = transaction.BoothID;
+                            boothCounts[booth] = (boothCounts[booth] || 0) +1;
+                        });
+
+                        const boothLabels = Object.keys(boothCounts);
+                        const boothData = Object.values(boothCounts);
+
+                        //create pie chart
+
+                        const ctxPie = document.getElementById('myPieChart').getContext('2d');
+                        new Chart(ctxPie, {
+                            type: 'doughnut',
+                            data: {
+                                labels: boothLabels,
+                                datasets: [{
+                                    data: boothData,
+                                    backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF', '#FF9F40']
+                                }]
+                            },
+                            options: {
+                                responsive: true,
+                                plugins: {
+                                    legend: {
+                                        position: 'top'
+                                    }
+                                }
+                            }
+                        });
+
+                        //create the Histogram
+
+                        // Create the Histogram
+                        const ctxHistogram = document.getElementById('myHistogram').getContext('2d');
+                        new Chart(ctxHistogram, {
+                            type: 'bar',
+                            data: {
+                                labels: boothLabels,
+                                datasets: [{
+                                    label: 'Number of Transactions',
+                                    data: boothData,
+                                    backgroundColor: '#42A5F5'
+                                }]
+                            },
+                            options: {
+                                scales: {
+                                    x: {
+                                        title: {
+                                            display: true,
+                                            text: 'Booth'
+                                        }
+                                    },
+                                    y: {
+                                        title: {
+                                            display: true,
+                                            text: 'Number of Transactions'
+                                        }
+                                    }
+                                }
+                            }
+                        });
                     })
                     .catch(error => {
                         console.error('Error fetching transactions:', error);
                     });
             });
         });
+                    
     </script>    
 </body>
 </html>
