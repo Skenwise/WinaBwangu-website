@@ -1,5 +1,7 @@
 <?php
 
+echo 'This php';
+
 include '../database_connection.php';
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
@@ -14,6 +16,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $stmt -> execute([$username, $email, $password]);
 
     echo "Sign-up successful!";
+
+    // Redirect to winabwangu website
+    header('Location: ../login/login.html');
+    exit(); // closed the header after the script
 
 }
 ?>
