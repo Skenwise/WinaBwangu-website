@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up | Wina Bwangu</title>
+    <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+    <div class="signup-container">
+        <form action="signup.php" method="POST" class="form-container">
+            <h2>Create Account</h2>
+            
+            <!-- Username Field -->
+            <div class="input-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" required placeholder="Choose a username">
+            </div>
+            
+            <!-- Email Field -->
+            <div class="input-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" required placeholder="Enter your email">
+            </div>
+            
+            <!-- Password Field -->
+            <div class="input-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required placeholder="Create a password">
+            </div>
+            
+            <!-- Confirm Password Field -->
+            <div class="input-group">
+                <label for="confirm_password">Confirm Password</label>
+                <input type="password" id="confirm_password" name="confirm_password" required placeholder="Confirm your password">
+            </div>
+
+            <!-- Sign Up Button -->
+            <button type="submit" class="btn">Sign Up</button>
+
+            <div class="login-link">
+                <p>Already have an account? <a href="../login/login.html">Login here</a></p>
+            </div>
+        </form>
+    </div>
+</body>
+</html>
